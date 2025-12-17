@@ -1,0 +1,5 @@
+{
+  "name": "Package Conflict Identifier",
+  "description": "An AI-powered dependency resolver that uses a multi-agent architecture with Google Gemini and Google Search Grounding to diagnose and fix Python package conflicts.",
+  "requestFramePermissions": []
+}
