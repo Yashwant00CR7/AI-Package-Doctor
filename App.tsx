@@ -6,6 +6,10 @@ import Navigation from './components/Navigation';
 import Home from './components/Home';
 import Resolver from './components/Resolver';
 import MCPStatus from './components/MCPStatus';
+import Support from './components/Support';
+import ScheduleDemo from './components/ScheduleDemo';
+import Privacy from './components/Privacy';
+import Status from './components/Status';
 
 const App: React.FC = () => {
   const [view, setView] = useState<AppView>('home');
@@ -92,7 +96,7 @@ const App: React.FC = () => {
 
     switch (view) {
       case 'home':
-        return <Home onGetStarted={() => setView('resolver')} />;
+        return <Home onGetStarted={() => setView('resolver')} onScheduleDemo={() => setView('demo')} />;
       case 'resolver':
         return (
           <Resolver 
@@ -104,8 +108,16 @@ const App: React.FC = () => {
         );
       case 'mcp-status':
         return <MCPStatus />;
+      case 'support':
+        return <Support />;
+      case 'demo':
+        return <ScheduleDemo onBack={() => setView('home')} />;
+      case 'privacy':
+        return <Privacy />;
+      case 'status':
+        return <Status />;
       default:
-        return <Home onGetStarted={() => setView('resolver')} />;
+        return <Home onGetStarted={() => setView('resolver')} onScheduleDemo={() => setView('demo')} />;
     }
   };
 
@@ -125,8 +137,8 @@ const App: React.FC = () => {
             &copy; 2024 AI Package Doctor. All rights reserved. Built with Google Gemini Deep Research.
           </p>
           <div className="flex gap-6">
-            <a href="#" className="text-slate-400 hover:text-brand-primary transition-colors text-xs font-bold uppercase tracking-widest">Privacy</a>
-            <a href="#" className="text-slate-400 hover:text-brand-primary transition-colors text-xs font-bold uppercase tracking-widest">Status</a>
+            <button onClick={() => setView('privacy')} className={`text-xs font-bold uppercase tracking-widest transition-colors ${view === 'privacy' ? 'text-brand-primary' : 'text-slate-400 hover:text-brand-primary'}`}>Privacy</button>
+            <button onClick={() => setView('status')} className={`text-xs font-bold uppercase tracking-widest transition-colors ${view === 'status' ? 'text-brand-primary' : 'text-slate-400 hover:text-brand-primary'}`}>Status</button>
           </div>
         </div>
       </footer>

@@ -30,4 +30,4 @@ export interface McpLog {
   data?: any;
 }
 
-export type AppView = 'home' | 'resolver' | 'mcp-status';
+export type AppView = 'home' | 'resolver' | 'mcp-status' | 'support' | 'demo' | 'privacy' | 'status';

@@ -1,7 +1,12 @@
 
 import React from 'react';
 
-const Home: React.FC<{ onGetStarted: () => void }> = ({ onGetStarted }) => {
+interface HomeProps {
+  onGetStarted: () => void;
+  onScheduleDemo: () => void;
+}
+
+const Home: React.FC<HomeProps> = ({ onGetStarted, onScheduleDemo }) => {
   return (
     <div className="w-full">
       {/* Hero Section */}
@@ -24,7 +29,10 @@ const Home: React.FC<{ onGetStarted: () => void }> = ({ onGetStarted }) => {
               Run Free Diagnosis
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
             </button>
-            <button className="w-full sm:w-auto px-10 py-4 bg-white border border-slate-200 text-slate-900 font-bold rounded-xl transition-all hover:bg-slate-50">
+            <button 
+              onClick={onScheduleDemo}
+              className="w-full sm:w-auto px-10 py-4 bg-white border border-slate-200 text-slate-900 font-bold rounded-xl transition-all hover:bg-slate-50"
+            >
               Schedule Demo
             </button>
           </div>

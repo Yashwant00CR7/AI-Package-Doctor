@@ -47,7 +47,14 @@ const Navigation: React.FC<NavigationProps> = ({ currentView, setView }) => {
         </div>
 
         <div className="flex items-center gap-3">
-          <button className="hidden sm:block text-sm font-semibold text-slate-600 px-4">Support</button>
+          <button 
+            onClick={() => setView('support')}
+            className={`hidden sm:block text-sm font-semibold px-4 transition-colors ${
+              currentView === 'support' ? 'text-brand-primary' : 'text-slate-600 hover:text-slate-900'
+            }`}
+          >
+            Support
+          </button>
           <button 
             onClick={() => setView('resolver')}
             className="bg-brand-primary hover:bg-brand-dark text-white px-5 py-2.5 rounded-lg text-sm font-bold shadow-md shadow-blue-100 transition-all active:scale-95"
