@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { PackageDoctorService } from './services/geminiService';
 import { AgentStep, ResolutionResult, AppView } from './types';
 import Navigation from './components/Navigation';
@@ -12,10 +12,27 @@ const App: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [steps, setSteps] = useState<AgentStep[]>([]);
   const [result, setResult] = useState<ResolutionResult | null>(null);
+  const [hasApiKey, setHasApiKey] = useState(true);
 
-  const service = new PackageDoctorService();
+  useEffect(() => {
+    const checkKey = async () => {
+      if (window.aistudio && typeof window.aistudio.hasSelectedApiKey === 'function') {
+        const selected = await window.aistudio.hasSelectedApiKey();
+        setHasApiKey(selected);
+      }
+    };
+    checkKey();
+  }, []);
+
+  const handleOpenKeySelector = async () => {
+    if (window.aistudio && typeof window.aistudio.openSelectKey === 'function') {
+      await window.aistudio.openSelectKey();
+      setHasApiKey(true);
+    }
+  };
 
   const handleResolve = async (reqs: string, logs: string) => {
+    const service = new PackageDoctorService();
     setLoading(true);
     setResult(null);
     setSteps([]);
@@ -34,12 +51,45 @@ const App: React.FC = () => {
       setResult(res);
     } catch (error) {
       console.error("Resolution failed", error);
+      alert(`Error: ${error instanceof Error ? error.message : 'Analysis failed'}`);
     } finally {
       setLoading(false);
     }
   };
 
   const renderContent = () => {
+    if (!hasApiKey) {
+      return (
+        <div className="min-h-screen flex items-center justify-center bg-slate-50 p-6">
+          <div className="card-saas max-w-md w-full p-10 text-center space-y-6 shadow-2xl">
+            <div className="w-16 h-16 bg-blue-100 text-brand-primary rounded-2xl flex items-center justify-center mx-auto">
+              <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"/></svg>
+            </div>
+            <div>
+              <h2 className="text-2xl font-black text-slate-900 mb-2">Key Selection Required</h2>
+              <p className="text-slate-500 text-sm leading-relaxed mb-6">
+                To use Gemini 3 Pro reasoning features, you must select a valid API key from a paid GCP project.
+              </p>
+              <a 
+                href="https://ai.google.dev/gemini-api/docs/billing" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="text-xs font-bold text-brand-primary hover:underline block mb-8"
+              >
+                Learn about Gemini API billing
+              </a>
+              <button 
+                onClick={handleOpenKeySelector}
+                className="w-full py-4 bg-brand-primary hover:bg-brand-dark text-white font-bold rounded-xl shadow-lg shadow-blue-200 transition-all active:scale-95"
+              >
+                Select API Key
+              </button>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
     switch (view) {
       case 'home':
         return <Home onGetStarted={() => setView('resolver')} />;
